@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-
+echo "Setup Started"
 # if version not passed in, default to latest released version
 export VERSION=1.1.0
 # if ca version not passed in, default to latest released version
@@ -14,7 +14,7 @@ export THIRDPARTY_IMAGE_VERSION=0.4.6
 export ARCH=$(echo "$(uname -s|tr '[:upper:]' '[:lower:]'|sed 's/mingw64_nt.*/windows/')-$(uname -m | sed 's/x86_64/amd64/g')" | awk '{print tolower($0)}')
 #Set MARCH variable i.e ppc64le,s390x,x86_64,i386
 MARCH=`uname -m`
-
+echo "Break point 1"
 printHelp() {
   echo "Usage: bootstrap.sh [<version>] [<ca_version>] [-d -s -b]"
   echo
@@ -25,7 +25,7 @@ printHelp() {
   echo "e.g. bootstrap.sh 1.1.1 -s"
   echo "would download docker images and binaries for version 1.1.1"
 }
-
+echo "Break point 2"
 dockerFabricPull() {
   local FABRIC_TAG=$1
   for IMAGES in peer orderer ccenv javaenv tools; do
@@ -35,7 +35,7 @@ dockerFabricPull() {
       docker tag hyperledger/fabric-$IMAGES:$FABRIC_TAG hyperledger/fabric-$IMAGES
   done
 }
-
+echo "Break point 3"
 dockerThirdPartyImagesPull() {
   local THIRDPARTY_TAG=$1
   for IMAGES in couchdb kafka zookeeper; do
@@ -45,7 +45,7 @@ dockerThirdPartyImagesPull() {
       docker tag hyperledger/fabric-$IMAGES:$THIRDPARTY_TAG hyperledger/fabric-$IMAGES
   done
 }
-
+echo "Break point 4"
 dockerCaPull() {
       local CA_TAG=$1
       echo "==> FABRIC CA IMAGE"
@@ -53,7 +53,7 @@ dockerCaPull() {
       docker pull hyperledger/fabric-ca:$CA_TAG
       docker tag hyperledger/fabric-ca:$CA_TAG hyperledger/fabric-ca
 }
-
+echo "Break point 5"
 : ${CA_TAG:="$MARCH-$CA_VERSION"}
 : ${FABRIC_TAG:="$MARCH-$VERSION"}
 : ${THIRDPARTY_TAG:="$MARCH-$THIRDPARTY_IMAGE_VERSION"}
@@ -75,7 +75,7 @@ samplesInstall() {
     git clone -b master https://github.com/hyperledger/fabric-samples.git && cd fabric-samples && git checkout v${VERSION}
   fi
 }
-
+echo "Break point 6"
 binariesInstall() {
   echo "===> Downloading version ${FABRIC_TAG} platform specific fabric binaries"
   curl https://nexus.hyperledger.org/content/repositories/releases/org/hyperledger/fabric/hyperledger-fabric/${ARCH}-${VERSION}/hyperledger-fabric-${ARCH}-${VERSION}.tar.gz | tar xz
@@ -88,7 +88,7 @@ binariesInstall() {
      echo
    fi
 }
-
+echo "Break point 7"
 dockerInstall() {
   which docker >& /dev/null
   NODOCKER=$?
